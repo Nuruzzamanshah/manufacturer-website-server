@@ -17,10 +17,13 @@ async function run(){
     try{
         await client.connect();
         // console.log('database connected');
-        const purchasesCollection = client.db('oak_tools').collection('purchases');
+        const purchaseCollection = client.db('oak_tools').collection('purchases');
 
         app.get('/purchase', async(req, res) =>{
             const query = {};
+            const cursor = purchaseCollection.find(query);
+            const purchases = await cursor.toArray();
+            res.send(purchases);
         })
     }
     finally{}
