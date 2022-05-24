@@ -16,7 +16,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         await client.connect();
-        console.log('database connected');
+        // console.log('database connected');
+        const purchasesCollection = client.db('oak_tools').collection('purchases');
+
+        app.get('/purchase', async(req, res) =>{
+            const query = {};
+        })
     }
     finally{}
 }
