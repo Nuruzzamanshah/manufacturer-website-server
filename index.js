@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const res = require('express/lib/response');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -18,13 +19,21 @@ async function run(){
         await client.connect();
         // console.log('database connected');
         const purchaseCollection = client.db('oak_tools').collection('purchases');
+        const bookingCollection = client.db('oak_tools').collection('bookings');
 
         app.get('/purchase', async(req, res) =>{
             const query = {};
             const cursor = purchaseCollection.find(query);
             const purchases = await cursor.toArray();
             res.send(purchases);
+        });
+
+        app.post('/booking', async(req, res)=>{
+          const booking = req.body;
+          const result = await bookingCollection.insertOne(booking);
+          res.send(result);
         })
+
     }
     finally{}
 }
