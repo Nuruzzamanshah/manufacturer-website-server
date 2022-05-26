@@ -20,6 +20,7 @@ async function run(){
         // console.log('database connected');
         const purchaseCollection = client.db('oak_tools').collection('purchases');
         const bookingCollection = client.db('oak_tools').collection('bookings');
+        const usersCollection = client.db('oak_tools').collection('users');
 
         app.get('/purchase', async(req, res) =>{
             const query = {};
@@ -27,6 +28,18 @@ async function run(){
             const purchases = await cursor.toArray();
             res.send(purchases);
         });
+
+        app.put('/user/:email', async(req, res)=>{
+          const email = req.params.email;
+          const user = req.body;
+          const filter = {email: email}
+          const options = { upsert: true };
+          const updateDoc = {
+            $set: user,
+          };
+          const result = await usersCollection.updateOne(filter, updateDoc, options);
+          res.send(result);
+        })
 
         app.get('/booking', async(req, res) =>{
           const userEmail = req.query.userEmail;
