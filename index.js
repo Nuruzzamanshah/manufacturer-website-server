@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ee3pzih.mongodb.net/?retryWrites=true&w=majority`;
-
+// console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run(){
@@ -28,15 +28,25 @@ async function run(){
             res.send(purchases);
         });
 
+        // app.get('/booking', async(req, res) =>{
+        //   const userName= req.query.userName;
+        //   const query = {userName: userName};
+        //   const bookings= await bookingCollection.find(query).toArray();
+        //   res.send(bookings);
+        // })
+
         app.post('/booking', async(req, res)=>{
           const booking = req.body;
-          const query = {userName: booking.userName}
-          const exists = await bookingCollection.findOne(query);
-          if(exists){
-            return res.send({success: false, booking: exists})
-          }
           const result = await bookingCollection.insertOne(booking);
-         return res.send({success: true,result});
+          res.send(result);
+
+        //   const query = {userName: booking.userName}
+        //   const exists = await bookingCollection.findOne(query);
+        //   if(exists){
+        //     return res.send({success: false, booking: exists})
+        //   }
+        //   const result = await bookingCollection.insertOne(booking);
+        //  return res.send({success: true,result});
         })
 
     }
