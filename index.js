@@ -28,25 +28,22 @@ async function run(){
             res.send(purchases);
         });
 
-        // app.get('/booking', async(req, res) =>{
-        //   const userName= req.query.userName;
-        //   const query = {userName: userName};
-        //   const bookings= await bookingCollection.find(query).toArray();
-        //   res.send(bookings);
-        // })
+        app.get('/booking', async(req, res) =>{
+          const userEmail = req.query.userEmail;
+          const query = {userEmail: userEmail};
+          const bookings= await bookingCollection.find(query).toArray();
+          res.send(bookings);
+        })
 
         app.post('/booking', async(req, res)=>{
           const booking = req.body;
+          const query = {userName: booking.userName, date: booking.date, purchase: booking.purchase}
+          const exists = await bookingCollection.findOne(query);
+          if(exists){
+                 return res.send({success: false, booking: exists})
+               }
           const result = await bookingCollection.insertOne(booking);
-          res.send(result);
-
-        //   const query = {userName: booking.userName}
-        //   const exists = await bookingCollection.findOne(query);
-        //   if(exists){
-        //     return res.send({success: false, booking: exists})
-        //   }
-        //   const result = await bookingCollection.insertOne(booking);
-        //  return res.send({success: true,result});
+          return res.send({success: true,result});
         })
 
     }
