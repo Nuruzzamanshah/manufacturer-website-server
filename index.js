@@ -21,10 +21,11 @@ async function run(){
         const purchaseCollection = client.db('oak_tools').collection('purchases');
         const bookingCollection = client.db('oak_tools').collection('bookings');
         const usersCollection = client.db('oak_tools').collection('users');
+        const productsCollection = client.db('oak_tools').collection('products');
 
         app.get('/purchase', async(req, res) =>{
             const query = {};
-            const cursor = purchaseCollection.find(query);
+            const cursor = purchaseCollection.find(query);  //.project({name: 1})
             const purchases = await cursor.toArray();
             res.send(purchases);
         });
@@ -75,6 +76,12 @@ async function run(){
                }
           const result = await bookingCollection.insertOne(booking);
           return res.send({success: true,result});
+        });
+
+        app.post('/product', async(req, res)=>{
+          const product = req.body;
+          const result = await productsCollection.insertOne(product);
+          res.send(result);
         })
 
     }
