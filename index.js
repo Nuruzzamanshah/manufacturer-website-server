@@ -78,9 +78,21 @@ async function run(){
           return res.send({success: true,result});
         });
 
+        app.get('/product', async(req, res)=>{
+          const product = await productsCollection.find().toArray();
+          res.send(product);
+        })
+
         app.post('/product', async(req, res)=>{
           const product = req.body;
           const result = await productsCollection.insertOne(product);
+          res.send(result);
+        });
+
+        app.delete('/product/:email', async(req, res)=>{
+          const email = req.params.email;
+          const filter = {email: email}
+          const result = await productsCollection.deleteOne(filter);
           res.send(result);
         })
 
