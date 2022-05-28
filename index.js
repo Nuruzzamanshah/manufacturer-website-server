@@ -3,7 +3,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const res = require('express/lib/response');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -67,6 +67,13 @@ async function run(){
           res.send(bookings);
         })
 
+        app.get('/booking/:id', async(req, res) =>{
+          const id = req.params.id;
+          const query = {_id: ObjectId(id)};
+          const booking = await bookingCollection.findOne(query);
+          res.send(booking);
+        })
+
         app.post('/booking', async(req, res)=>{
           const booking = req.body;
           const query = {userName: booking.userName, date: booking.date, purchase: booking.purchase}
@@ -77,6 +84,8 @@ async function run(){
           const result = await bookingCollection.insertOne(booking);
           return res.send({success: true,result});
         });
+
+
 
         app.get('/product', async(req, res)=>{
           const product = await productsCollection.find().toArray();
